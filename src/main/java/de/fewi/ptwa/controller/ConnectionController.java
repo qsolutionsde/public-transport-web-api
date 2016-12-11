@@ -33,7 +33,7 @@ public class ConnectionController {
 
     @RequestMapping(value = "/connection", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity connection(@RequestParam(value = "from", required = true) String from, @RequestParam(value = "to", required = true) String to, @RequestParam(value = "provider", required = false) String providerName, @RequestParam(value = "product", required = true) char product, @RequestParam(value = "timeOffset", required = true, defaultValue = "0") int timeOffset) throws IOException {
+    public ResponseEntity connection(@RequestParam(value = "from", required = true) String from, @RequestParam(value = "to", required = true) String to, @RequestParam(value = "provider", required = false) String providerName, @RequestParam(value = "product", required = true) String product, @RequestParam(value = "timeOffset", required = true, defaultValue = "0") int timeOffset) throws IOException {
         NetworkProvider provider;
         if(providerName != null)
         {
@@ -42,7 +42,7 @@ public class ConnectionController {
         else
             provider = new VagfrProvider();
         plannedDepartureTime.setTime(new Date().getTime() + timeOffset * 60 * 1000);
-        char[] products = {product};
+        char[] products = product.toCharArray();
         QueryTripsResult efaData = provider.queryTrips(new Location(LocationType.STATION, from), null, new Location(LocationType.STATION, to), plannedDepartureTime, true, Product.fromCodes(products), null, null, null, null);
 
         if (efaData.status.name().equals("OK")) {
